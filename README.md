@@ -19,7 +19,7 @@ Project1-K6-LOADTEST/
 │   ├── config.js
 │   ├── signup.js
 │   └── ai-generate.js
-├── results/
+├── result/
 ├── testScript/
 │   ├── v1/
 │   │   └── load-test.js

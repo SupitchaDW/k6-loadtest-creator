@@ -2,9 +2,7 @@
 .env*
 
 # k6 loadtest results
-/result/*.json
-/result/*.csv
-/result/*.html
+/result/
 *.log
 
 # Temporary data
