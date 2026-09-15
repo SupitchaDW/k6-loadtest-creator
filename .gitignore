@@ -1,0 +1,14 @@
+# Environment
+.env*
+
+# k6 loadtest results
+/result/*.json
+/result/*.csv
+/result/*.html
+*.log
+
+# Temporary data
+/data/creator-pool-temp.json
+
+# macOS
+.DS_Store

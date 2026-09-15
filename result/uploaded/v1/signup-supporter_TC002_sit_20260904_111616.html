@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>signup-supporter - TC002</title>
+
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      margin-top: 40px;
+    }
+
+    h3 {
+      margin-top: 25px;
+    }
+
+    .info {
+      margin-bottom: 30px;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .label {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .value {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 15px;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #eee;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<h1>K6 Load Test Report</h1>
+
+<div class="info">
+
+  <div>
+    <b>Environment:</b> sit
+  </div>
+
+  <div>
+    <b>API Flow:</b> signup-supporter
+  </div>
+
+  <div>
+    <b>Test Case:</b> TC002
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     OVERVIEW
+============================================================ -->
+
+<div class="grid">
+
+  <div class="card">
+
+    <div class="label">
+      Total Requests
+    </div>
+
+    <div class="value">
+      60
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="label">
+      Check Success
+    </div>
+
+    <div class="value">
+      100.00%
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="label">
+      P95 Response Time
+    </div>
+
+    <div class="value">
+      7020.06 ms
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="label">
+      Max VUs
+    </div>
+
+    <div class="value">
+      60
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ============================================================
+     AI GENERATE
+     
+     แสดงเฉพาะ AI flow ที่กำลังรัน
+============================================================ -->
+
+
+
+
+<!-- ============================================================
+     TOTAL RESULTS
+============================================================ -->
+
+<h2>TOTAL RESULTS</h2>
+
+
+<!-- CHECKS -->
+
+<h3>Checks</h3>
+
+<table>
+
+  <tr>
+    <th>Metric</th>
+    <th>Value</th>
+  </tr>
+
+  <tr>
+    <td>Checks Total</td>
+    <td>60</td>
+  </tr>
+
+  <tr>
+    <td>Checks Passed</td>
+    <td>60</td>
+  </tr>
+
+  <tr>
+    <td>Checks Failed</td>
+    <td>0</td>
+  </tr>
+
+  <tr>
+    <td>Check Success Rate</td>
+    <td>100.00%</td>
+  </tr>
+
+</table>
+
+
+<!-- HTTP -->
+
+<h3>HTTP</h3>
+
+<table>
+
+  <tr>
+    <th>Metric</th>
+    <th>Value</th>
+  </tr>
+
+  <tr>
+    <td>Total Requests</td>
+    <td>60</td>
+  </tr>
+
+  <tr>
+    <td>Failed Requests</td>
+    <td>0.00%</td>
+  </tr>
+
+  <tr>
+    <td>Average Response Time</td>
+    <td>6317.33 ms</td>
+  </tr>
+
+  <tr>
+    <td>Min Response Time</td>
+    <td>4808.87 ms</td>
+  </tr>
+
+  <tr>
+    <td>Median Response Time</td>
+    <td>6582.83 ms</td>
+  </tr>
+
+  <tr>
+    <td>Max Response Time</td>
+    <td>7051.50 ms</td>
+  </tr>
+
+  <tr>
+    <td>P90</td>
+    <td>7016.60 ms</td>
+  </tr>
+
+  <tr>
+    <td>P95</td>
+    <td>7020.06 ms</td>
+  </tr>
+
+  <tr>
+    <td>P99</td>
+    <td>-</td>
+  </tr>
+
+</table>
+
+
+<!-- EXECUTION -->
+
+<h3>Execution</h3>
+
+<table>
+
+  <tr>
+    <th>Metric</th>
+    <th>Value</th>
+  </tr>
+
+  <tr>
+    <td>Iterations</td>
+    <td>60</td>
+  </tr>
+
+  <tr>
+    <td>Iteration Rate</td>
+    <td>
+      7.92 /s
+    </td>
+  </tr>
+
+  <tr>
+    <td>Iteration Duration Avg</td>
+    <td>6850.39 ms</td>
+  </tr>
+
+  <tr>
+    <td>Current VUs</td>
+    <td>32</td>
+  </tr>
+
+  <tr>
+    <td>Max VUs</td>
+    <td>60</td>
+  </tr>
+
+</table>
+
+
+<!-- NETWORK -->
+
+<h3>Network</h3>
+
+<table>
+
+  <tr>
+    <th>Metric</th>
+    <th>Value</th>
+  </tr>
+
+  <tr>
+    <td>Data Received</td>
+    <td>
+      355842 bytes
+    </td>
+  </tr>
+
+  <tr>
+    <td>Data Received Rate</td>
+    <td>
+      46994.298090669276 bytes/s
+    </td>
+  </tr>
+
+  <tr>
+    <td>Data Sent</td>
+    <td>
+      143802 bytes
+    </td>
+  </tr>
+
+  <tr>
+    <td>Data Sent Rate</td>
+    <td>
+      18991.22097457417 bytes/s
+    </td>
+  </tr>
+
+</table>
+
+</body>
+</html>
