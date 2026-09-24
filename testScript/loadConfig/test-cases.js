@@ -37,7 +37,7 @@ export const REGISTER_TEST_CASES = {
 
     duration: '10m',
 
-    preAllocatedVUs: 50,
+    preAllocatedVUs: 93,
     maxVUs: 150,
   },
 
@@ -97,19 +97,17 @@ export const AI_TEST_CASES = {
 
   // TC003 - Sustained Load
   TC003: {
-    executor: 'constant-arrival-rate',
+  executor: 'constant-arrival-rate',
 
-    // 4 AI requests/sec
-    rate: 4,
-    timeUnit: '1s',
+  // 20 signup flows per second
+  rate: 20,
+  timeUnit: '1s',
 
-    // 2,400 requests total
-    duration: '10m',
+  duration: '10m',
 
-    // Enough VUs for high AI latency
-    preAllocatedVUs: 120,
-    maxVUs: 180,
-  },
+  preAllocatedVUs: 150,
+  maxVUs: 300,
+},
 
   // TC004 - Spike
   TC004: {

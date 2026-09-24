@@ -21,7 +21,7 @@ export function login(username = CONFIG.username, password = CONFIG.password) {
       tags: {
         api: 'login',
         api_flow: __ENV.API_FLOW || 'login',
-        test_case: __ENV.TEST_CASE || 'TC01',
+        test_case: __ENV.TEST_CASE,
         environment: __ENV.ENVIRONMENT || 'sit',
       },
     }

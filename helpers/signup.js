@@ -15,86 +15,17 @@ export function buildUniqueCreatorDisplayName() {
 }
 
 
-export function signUpSupporter(data = {}) {
-  const email = buildUniqueEmail();
-  const displayName = buildUniqueUserDisplayName();
-  const idempotencyKey = uuidv4();
-
-  const payload = JSON.stringify({
-    email,
-    password: data.password,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    displayName,
-    phoneNumber: data.phoneNumber,
-    dateOfBirth: data.dateOfBirth,
-    gender: data.gender,
-
-    ...(data.legalEntityNumber
-      ? { legalEntityNumber: data.legalEntityNumber }
-      : {}),
-
-    ...(data.address
-      ? { address: data.address }
-      : {}),
-  });
-
-  const res = http.post(
-    `${CONFIG.baseUrl}${CONFIG.signUpPath}`,
-    payload,
-    {
-      headers: {
-        ...jsonHeaders(),
-
-        // Required by Sign Up API
-        'Idempotency-Key': idempotencyKey,
-
-        // Required by Auth API
-        'x-device': CONFIG.deviceId,
-      },
-
-      timeout: CONFIG.timeout,
-
-      tags: {
-        api: 'sign-up',
-        signup_type: 'supporter',
-        api_flow: __ENV.API_FLOW || 'signup-supporter',
-        test_case: __ENV.TEST_CASE || 'TC01',
-        environment: __ENV.ENVIRONMENT || 'sit',
-      },
-    }
-  );
-
-  check(res, {
-    'supporter signup returns 2xx': (r) =>
-      r.status >= 200 && r.status < 300,
-  });
-
-  // console.log(`Signup status: ${res.status}`);
-  // console.log(`Email: ${email}`);
-
-  return {
-    res,
-    email,
-    displayName,
-  };
-}
-
-
-export function signUpCreator(data = {}) {
+export function signUpUser(data = {}, options = {}) {
   const email = data.email || buildUniqueEmail();
-  const userDisplayName = data.userDisplayName || buildUniqueUserDisplayName();
-  const creatorDisplayName = data.creatorDisplayName || buildUniqueCreatorDisplayName();
+  const displayName = data.displayName || data.userDisplayName || buildUniqueUserDisplayName();
   const idempotencyKey = uuidv4();
 
-
-  // Step 1-2: Sign Up User
   const signUpPayload = {
     email,
     password: data.password,
     firstName: data.firstName,
     lastName: data.lastName,
-    displayName: userDisplayName,
+    displayName,
     phoneNumber: data.phoneNumber,
     dateOfBirth: data.dateOfBirth,
     gender: data.gender,
@@ -108,7 +39,7 @@ export function signUpCreator(data = {}) {
       : {}),
   };
 
-  const signUpRes = http.post(
+  const res = http.post(
     `${CONFIG.baseUrl}${CONFIG.signUpPath}`,
     JSON.stringify(signUpPayload),
     {
@@ -117,88 +48,57 @@ export function signUpCreator(data = {}) {
         'idempotency-key': idempotencyKey,
         'x-device': CONFIG.deviceId,
       },
-
       timeout: CONFIG.timeout,
-
       tags: {
         api: 'sign-up',
-        signup_type: 'creator',
-        api_flow: __ENV.API_FLOW || 'signup-supporter',
-        test_case: __ENV.TEST_CASE || 'TC01',
+        signup_type: options.signupType || 'supporter',
+        api_flow: options.apiFlow || __ENV.API_FLOW || 'signup-supporter',
+        test_case: options.testCase || __ENV.TEST_CASE || 'TC01',
         environment: __ENV.ENVIRONMENT || 'sit',
       },
     }
   );
 
-  check(signUpRes, {
-    'creator user signup returns 2xx': (r) =>
+  check(res, {
+    'user signup returns 2xx': (r) =>
       r.status >= 200 && r.status < 300,
   });
 
-  if (
-    signUpRes.status < 200 ||
-    signUpRes.status >= 300
-  ) {
-    // console.log(`Signup status: ${signUpRes.status}`);
-    // console.log(`Response: ${signUpRes.body}`);
+  let token = null;
+  try {
+    const body = res.json();
+    token =
+      body.data?.token ||
+      body.token ||
+      body.data?.accessToken ||
+      body.accessToken ||
+      null;
+  } catch (_) {}
 
-    return {
-      success: false,
-      step: 'sign-up',
-      email,
-      userDisplayName,
-      creatorDisplayName,
-      signUpRes,
-    };
-  }
-
-  // Get token
-  const signUpBody = signUpRes.json();
-  const token = signUpBody.data?.token;
-
-  if (!token) {
-    console.log('Sign Up response does not contain token');
-
-    return {
-      success: false,
-      step: 'sign-up-token',
-      email,
-      userDisplayName,
-      creatorDisplayName,
-      signUpRes,
-    };
-  }
-
-
-  // Register as Creator
-  const businessPayload = {
-    ...data.businessData,
-
-    basicInformation: {
-      ...data.businessData.basicInformation,
-      displayName: creatorDisplayName,
-    },
+  return {
+    res,
+    token,
+    email,
+    displayName,
+    success: res.status >= 200 && res.status < 300 && !!token,
   };
+}
 
-  // console.log(`Register Business URL: ${CONFIG.baseUrl}${CONFIG.registerBusinessPath}`);
-
+export function registerBusiness(token, businessData = {}, options = {}) {
   const businessRes = http.post(
     `${CONFIG.baseUrl}${CONFIG.registerBusinessPath}`,
-    JSON.stringify(businessPayload),
+    JSON.stringify(businessData),
     {
       headers: {
         ...jsonHeaders(),
         'Authorization': `Bearer ${token}`,
-        // 'idempotency-key': idempotencyKey,
         'x-device': CONFIG.deviceId,
       },
-
       timeout: CONFIG.timeout,
-
       tags: {
         api: 'register-business',
-        api_flow: __ENV.API_FLOW || 'creator-individual',
-        test_case: __ENV.TEST_CASE || 'TC01',
+        api_flow: options.apiFlow || __ENV.API_FLOW || 'creator-individual',
+        test_case: options.testCase || __ENV.TEST_CASE,
         environment: __ENV.ENVIRONMENT || 'sit',
       },
     }
@@ -209,15 +109,74 @@ export function signUpCreator(data = {}) {
       r.status >= 200 && r.status < 300,
   });
 
-  return {
-    success:
-      businessRes.status >= 200 &&
-      businessRes.status < 300,
+  return businessRes;
+}
 
-    email,
-    userDisplayName,
+export function signUpSupporter(data = {}) {
+  const result = signUpUser(data, {
+    signupType: 'supporter',
+    apiFlow: __ENV.API_FLOW || 'signup-supporter',
+    testCase: __ENV.TEST_CASE || 'TC01',
+  });
+
+  return {
+    res: result.res,
+    token: result.token,
+    email: result.email,
+    displayName: result.displayName,
+    success: result.success,
+  };
+}
+
+export function signUpCreator(data = {}) {
+  const creatorDisplayName = data.creatorDisplayName || buildUniqueCreatorDisplayName();
+
+  // Step 1: Sign up user & get token
+  const userResult = signUpUser(
+    {
+      ...data,
+      displayName: data.userDisplayName || data.displayName,
+    },
+    {
+      signupType: 'creator',
+      apiFlow: __ENV.API_FLOW || 'creator-individual',
+      testCase: __ENV.TEST_CASE,
+    }
+  );
+
+  if (!userResult.success || !userResult.token) {
+    return {
+      success: false,
+      step: 'sign-up',
+      email: userResult.email,
+      userDisplayName: userResult.displayName,
+      creatorDisplayName,
+      signUpRes: userResult.res,
+      token: null,
+    };
+  }
+
+  // Step 2: Register business using token
+  const businessPayload = {
+    ...data.businessData,
+    basicInformation: {
+      ...data.businessData?.basicInformation,
+      displayName: creatorDisplayName,
+    },
+  };
+
+  const businessRes = registerBusiness(userResult.token, businessPayload, {
+    apiFlow: __ENV.API_FLOW || 'creator-individual',
+    testCase: __ENV.TEST_CASE,
+  });
+
+  return {
+    success: businessRes.status >= 200 && businessRes.status < 300,
+    email: userResult.email,
+    userDisplayName: userResult.displayName,
     creatorDisplayName,
-    signUpRes,
+    token: userResult.token,
+    signUpRes: userResult.res,
     businessRes,
   };
 }

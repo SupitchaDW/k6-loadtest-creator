@@ -7,7 +7,6 @@ export const SUPPORTER_DATA = {
 
   dateOfBirth: '2001-01-01',
   gender: 'FEMALE',
-  legalEntityNumber: '1234567890123',
 
   address: {
     name: 'ploy test',
