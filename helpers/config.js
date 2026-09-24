@@ -2,7 +2,8 @@ const ENV = __ENV.ENVIRONMENT || 'sit';
 
 export const BASE_URL = {
   //sit: 'https://api-sit.fc-creator.datawow.io',
-  sit: 'http://api-loadtest.fc-creator.datawow.io'
+  sit: 'http://api-loadtest.fc-creator.datawow.io',
+  web: 'http://loadtest.fc-creator.datawow.io',
   // uat: 'https://uat.example.com',
   // prod: 'https://example.com',
 }[ENV];

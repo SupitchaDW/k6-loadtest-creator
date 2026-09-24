@@ -22,14 +22,26 @@ fi
 ENVIRONMENT="${1:-${ENVIRONMENT:-sit}}"
 export ENVIRONMENT
 
+# API Flow / Test Case
+API_FLOW="${API_FLOW:-login}"
+TEST_CASE="${TEST_CASE:-TC001}"
+
 # Test script
-TEST_SCRIPT="${TEST_SCRIPT:-testScript/run-all-api.js}"
+if [[ -n "${TEST_SCRIPT:-}" ]]; then
+  TEST_SCRIPT="${TEST_SCRIPT}"
+else
+  case "$API_FLOW" in
+    landing)
+      TEST_SCRIPT="testScript/api/landing-load-test.js"
+      ;;
+    *)
+      TEST_SCRIPT="testScript/run-all-api.js"
+      ;;
+  esac
+fi
 
 : "${TEST_USERNAME:?TEST_USERNAME is required}"
 : "${TEST_PASSWORD:?TEST_PASSWORD is required}"
-
-API_FLOW="${API_FLOW:-login}"
-TEST_CASE="${TEST_CASE:-TC001}"
 
 TEST_NAME="$(basename "${TEST_SCRIPT}" .js)"
 

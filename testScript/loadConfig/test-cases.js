@@ -145,3 +145,32 @@ export const AI_TEST_CASES = {
   },
 
 };
+
+export const LANDING_TEST_CASES = {
+
+  // TC001 - Smoke
+  TC001: {
+    executor: 'per-vu-iterations',
+    vus: 10,
+    iterations: 1,
+    maxDuration: '1m',
+  },
+
+  // TC002 - Concurrent Capacity
+  TC002: {
+    executor: 'per-vu-iterations',
+    vus: 1000,
+    iterations: 1,
+    maxDuration: '5m',
+  },
+
+  // TC003 - Sustained Load
+  TC003: {
+    executor: 'constant-arrival-rate',
+    rate: 20,
+    timeUnit: '1s',
+    duration: '10m',
+    preAllocatedVUs: 150,
+    maxVUs: 300,
+  },
+};

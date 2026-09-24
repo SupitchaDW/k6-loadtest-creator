@@ -6,8 +6,9 @@ import { signupCreatorJuristicFlow } from './api/signup-creator-juristic-flow.js
 import { aiGenerateContentFlow } from './api/ai-generate-content-flow.js';
 import { aiGenerate2DFlow } from './api/ai-generate-2d-flow.js';
 import { aiGenerate3DFlow } from './api/ai-generate-3d-flow.js';
+import { landingFlow } from './api/landing-flow.js';
 
-import { LOGIN_TEST_CASES, REGISTER_TEST_CASES, AI_TEST_CASES, } from './loadConfig/test-cases.js';
+import { LOGIN_TEST_CASES, REGISTER_TEST_CASES, AI_TEST_CASES, LANDING_TEST_CASES, } from './loadConfig/test-cases.js';
 import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.2/index.js';
 
 const API_FLOW = __ENV.API_FLOW || 'login';
@@ -28,6 +29,9 @@ function getTestCases() {
     case 'ai-generate-2d':
     case 'ai-generate-3d':
       return AI_TEST_CASES;
+
+    case 'landing':
+      return LANDING_TEST_CASES;
 
     default:
       throw new Error(`Unknown API_FLOW: ${API_FLOW}`);
@@ -81,6 +85,11 @@ export function runFlow() {
       
     case 'ai-generate-3d': 
       aiGenerate3DFlow(); 
+      break;
+
+    // ========================= // Landing Page // =========================
+    case 'landing':
+      landingFlow();
       break;
 
     default:
