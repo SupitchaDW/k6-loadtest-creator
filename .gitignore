@@ -2,8 +2,6 @@
 .env*
 
 # k6 loadtest results
-/result/
-/result-data/
 *.log
 
 # Temporary data

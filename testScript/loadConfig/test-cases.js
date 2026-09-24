@@ -24,7 +24,7 @@ export const REGISTER_TEST_CASES = {
   // Run: 100 → 250 → 300 → 350 VUs
   TC002: {
     executor: 'per-vu-iterations',
-    vus: 300,
+    vus: 150,
     iterations: 1,
     maxDuration: '5m',
   },
