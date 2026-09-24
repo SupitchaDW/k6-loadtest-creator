@@ -1,40 +1,29 @@
-import { CREATOR_USERS } from '../../creator-users.js';
-import { login } from '../../helpers/auth.js';
-import { generateContent, clearTasks, } from '../../helpers/ai-generate.js';
+import { USERS } from '../../data/supporter-users.js';
+import { generateContent, clearTasks } from '../../helpers/ai-generate.js';
 import { AI_GENERATE_CONTENT_DATA } from '../../data/ai-generate-data.js';
 
-
 export function aiGenerateContentFlow() {
-  const user = CREATOR_USERS[__VU - 1];
+  const user = USERS[(__VU - 1) % USERS.length];
 
   console.log(
-    `[AI Content] VU ${__VU}/${CREATOR_USERS.length} | ${user.email}`
+    `[AI Content] VU ${__VU}/${USERS.length} | ${user.email}`
   );
 
-  // Login
-  const loginResult = login(
-    user.email,
-    __ENV.TEST_PASSWORD
-  );
+  const token = user.token;
 
-  if (!loginResult.token) {
+  if (!token) {
     console.log(
-      `[AI Content] Login failed | ${user.email}`
+      `[AI Content] No token found for user | ${user.email}`
     );
     return;
   }
-
-  console.log(
-    `[AI Content] Login success | ${user.email}`
-  );
-
 
   const taskIds = [];
 
   // Generate Content
   const res = generateContent(
     AI_GENERATE_CONTENT_DATA,
-    loginResult.token,
+    token,
     taskIds
   );
 
@@ -47,5 +36,5 @@ export function aiGenerateContentFlow() {
   );
 
   // clear all task
-  clearTasks(taskIds, loginResult.token);
+  clearTasks(taskIds, token);
 }

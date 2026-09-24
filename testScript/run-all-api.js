@@ -44,7 +44,7 @@ if (!TEST_CASES[TEST_CASE]) {
 
 export const options = {
   scenarios: {
-    api_test: {
+    [API_FLOW.replace(/[^a-zA-Z0-9_]/g, '_')]: {
       ...TEST_CASES[TEST_CASE],
       exec: 'runFlow',
     },

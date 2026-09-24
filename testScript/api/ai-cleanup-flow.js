@@ -1,12 +1,11 @@
-import { CREATOR_USERS } from '../../creator-users.js';
-import { login } from '../../helpers/auth.js';
+import { USERS } from '../../data/supporter-users.js';
 import { clearContentTasks } from '../../helpers/ai-cleanup.js';
 
 export const options = {
   scenarios: {
     cleanup: {
       executor: 'per-vu-iterations',
-      vus: CREATOR_USERS.length,
+      vus: __ENV.VUS ? parseInt(__ENV.VUS, 10) : USERS.length,
       iterations: 1,
       maxDuration: '10m',
     },
@@ -14,31 +13,22 @@ export const options = {
 };
 
 export default function () {
-  const user = CREATOR_USERS[__VU - 1];
+  const user = USERS[(__VU - 1) % USERS.length];
 
   console.log(
-    `[AI Cleanup] VU ${__VU}/${CREATOR_USERS.length} | ${user.email}`
+    `[AI Cleanup] VU ${__VU}/${USERS.length} | ${user.email}`
   );
 
-  const loginResult = login(
-    user.email,
-    __ENV.TEST_PASSWORD
-  );
+  const token = user.token;
 
-  console.log(
-    `[AI Cleanup] Login result | ${user.email} | token=${!!loginResult.token}`
-  );
-
-  if (!loginResult.token) {
+  if (!token) {
     console.log(
-      `[AI Cleanup] Login failed | ${user.email}`
+      `[AI Cleanup] No token found for user | ${user.email}`
     );
     return;
   }
 
-  const taskCount = clearContentTasks(
-    loginResult.token
-  );
+  const taskCount = clearContentTasks(token);
 
   console.log(
     `[AI Cleanup] Completed | ${user.email} | tasks=${taskCount}`

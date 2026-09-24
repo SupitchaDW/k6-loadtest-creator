@@ -1,49 +1,29 @@
-import { CREATOR_USERS } from '../../creator-users.js';
-import { login } from '../../helpers/auth.js';
-import { generate2D, clearTasks, } from '../../helpers/ai-generate.js';
+import { USERS } from '../../data/supporter-users.js';
+import { generate2D, clearTasks } from '../../helpers/ai-generate.js';
 import { AI_GENERATE_2D_DATA } from '../../data/ai-generate-data.js';
 
-
 export function aiGenerate2DFlow() {
-  const user = CREATOR_USERS[__VU - 1];
+  const user = USERS[(__VU - 1) % USERS.length];
 
   console.log(
-    `[AI 2D] VU ${__VU}/${CREATOR_USERS.length} | ${user.email}`
+    `[AI 2D] VU ${__VU}/${USERS.length} | ${user.email}`
   );
 
-  // Login
-  const loginResult = login(
-    user.email,
-    __ENV.TEST_PASSWORD
-  );
+  const token = user.token;
 
-  console.log(
-    `[AI 2D] Login status: ${loginResult.res.status}`
-  );
-
-  if (!loginResult.token) {
+  if (!token) {
     console.log(
-      `[AI 2D] Login failed | ${user.email}`
+      `[AI 2D] No token found for user | ${user.email}`
     );
-
-    console.log(
-      `[AI 2D] Login response: ${loginResult.res.body}`
-    );
-
     return;
   }
-
-  console.log(
-    `[AI 2D] Login success | ${user.email}`
-  );
-
 
   const taskIds = [];
 
   // Generate 2D
   const res = generate2D(
     AI_GENERATE_2D_DATA,
-    loginResult.token,
+    token,
     taskIds
   );
 
@@ -56,5 +36,5 @@ export function aiGenerate2DFlow() {
   );
 
   // clear all task
-  clearTasks(taskIds, loginResult.token);
+  clearTasks(taskIds, token);
 }
